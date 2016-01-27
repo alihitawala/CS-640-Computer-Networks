@@ -1,4 +1,4 @@
-package com.uw.cs.cn;
+package com.uw.cs.cn.assgn1;
 
 import java.io.*;
 import java.net.ServerSocket;
