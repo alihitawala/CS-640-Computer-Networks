@@ -46,8 +46,8 @@ public class Iperfer {
             ServerSocket serverSocket = new ServerSocket(this.port);
             Socket client = serverSocket.accept();
             DataInputStream inFromClient = new DataInputStream(client.getInputStream());
-            long startTime = System.currentTimeMillis();
             long totalReceived = 0;
+            long startTime = System.nanoTime();
             try {
                 while (true) {
                     inFromClient.readFully(incoming);
@@ -56,9 +56,9 @@ public class Iperfer {
             } catch (EOFException e) {
                 //do nothing
             }
-            long totalTimeInReceiving = (System.currentTimeMillis() - startTime) / 1000;
+            double totalTimeInReceiving = (System.nanoTime() - startTime) / Math.pow(10, 6);
             serverSocket.close();
-            double rate = (totalReceived * 8) / (1000 * totalTimeInReceiving);
+            double rate = (totalReceived * 8.0) / (totalTimeInReceiving);
             System.out.println("received=" + totalReceived + " KB rate=" + rate + " Mbps");
         }
     }
@@ -78,14 +78,14 @@ public class Iperfer {
         public void start() throws IOException {
             Socket socket = new Socket(this.host, this.port);
             DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
-            long endTime = System.currentTimeMillis() + this.time * 1000;
             long totalWrites = 0;
-            while (System.currentTimeMillis() < endTime) {
+            long endTime = System.nanoTime() + this.time * (long) Math.pow(10, 9);
+            while (System.nanoTime() < endTime) {
                 outputStream.write(payload);
                 totalWrites++;
             }
             socket.close();
-            double rate = (totalWrites * 8) / (1000 * this.time);
+            double rate = (totalWrites * 8.0) / (1000 * this.time);
             System.out.println("sent=" + totalWrites + " KB rate=" + rate + " Mbps");
         }
     }
@@ -134,7 +134,7 @@ public class Iperfer {
                     throw new RuntimeException();
                 }
             } catch (Exception e) {
-                throw new RuntimeException(ERROR_WRONG_ARG);
+                throw new RuntimeException(ERROR_PORT_RANGE);
             }
         }
     }
