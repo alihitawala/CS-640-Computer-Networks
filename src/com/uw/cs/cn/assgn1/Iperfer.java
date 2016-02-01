@@ -22,17 +22,14 @@ public class Iperfer {
         if (argumentHandler.isServer()) {
             try {
                 new Server(Integer.parseInt(argMap.get("p"))).start();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 System.out.println("Server couldn't be started!");
             }
-        }
-        else {
+        } else {
             try {
                 new Client(argMap.get("h"), Integer.parseInt(argMap.get("p")), Integer.parseInt(argMap.get("t"))).start();
-            }
-            catch (Exception e) {
-                System.out.println("Client couldn't be started!");
+            } catch (Exception e) {
+                System.out.println("Client couldn't be started!" + e.getMessage());
             }
         }
     }
@@ -56,12 +53,12 @@ public class Iperfer {
                     inFromClient.readFully(incoming);
                     totalReceived++;
                 }
+            } catch (EOFException e) {
+                //do nothing
             }
-            catch (EOFException e) {
-
-            }
-            long totalTimeInReceiving = (System.currentTimeMillis()-startTime) / 1000;
-            double rate = (totalReceived*8)/(1000 * totalTimeInReceiving);
+            long totalTimeInReceiving = (System.currentTimeMillis() - startTime) / 1000;
+            serverSocket.close();
+            double rate = (totalReceived * 8) / (1000 * totalTimeInReceiving);
             System.out.println("received=" + totalReceived + " KB rate=" + rate + " Mbps");
         }
     }
@@ -87,8 +84,9 @@ public class Iperfer {
                 outputStream.write(payload);
                 totalWrites++;
             }
-            double rate = (totalWrites * 8)/(1000 * this.time);
-            System.out.println("sent=" + totalWrites+" KB rate=" + rate+" Mbps");
+            socket.close();
+            double rate = (totalWrites * 8) / (1000 * this.time);
+            System.out.println("sent=" + totalWrites + " KB rate=" + rate + " Mbps");
         }
     }
 
@@ -97,21 +95,19 @@ public class Iperfer {
         List<String> optionList = new ArrayList<>();
 
         public ArgumentHandler(String[] args) {
-            String option = "", value;
-            for (String arg : args) {
+            String option = "";
+            for (String arg : args) { // -s -p 9090 -t 9 -h host
                 boolean isOption = arg.charAt(0) == '-';
                 if (isOption) {
                     option = arg.substring(1);
-                    optionList.add(option);
-                }
-                else {
-                    optionsMap.put(option, arg);
+                    optionList.add(option); // [s,p] , [c,p,t,h]
+                } else {
+                    optionsMap.put(option, arg);//[{p,9090}, {t, 9}, {h,host}]
                 }
             }
             try {
                 checkArguments(optionList, optionsMap);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 System.out.println(e.getMessage());
                 System.exit(1);
             }
@@ -126,7 +122,6 @@ public class Iperfer {
         }
 
         private void checkArguments(List<String> optionList, Map<String, String> argMap) {
-            List<String> validOptions = new ArrayList<>();
             boolean clientCondition = optionList.contains("c") && optionList.contains("h")
                     && optionList.contains("t") && optionList.contains("p") && optionList.size() == 4;
             boolean serverCondition = optionList.contains("s") && optionList.size() == 2 && optionList.contains("p");
@@ -138,8 +133,7 @@ public class Iperfer {
                 if (port > 65535 || port < 1024) {
                     throw new RuntimeException();
                 }
-            }
-            catch(Exception e) {
+            } catch (Exception e) {
                 throw new RuntimeException(ERROR_WRONG_ARG);
             }
         }
