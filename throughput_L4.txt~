@@ -1,0 +1,8 @@
+sent=65377 KB rate=26.1508 Mbps
+received=65377 KB rate=23.888305617468696 Mbps
+
+[ ID] Interval       Transfer     Bandwidth
+[ 39]  0.0-10.3 sec  33.9 MBytes  27.5 Mbits/sec
+
+[ ID] Interval       Transfer     Bandwidth
+[ 40]  0.0-11.9 sec  33.9 MBytes  23.9 Mbits/sec

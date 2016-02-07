@@ -1,0 +1,46 @@
+Question 2
+Expected latency between h1-h4 = 161.55 ms. Latency = Propogation+transmission+Queuing delay. For a packet size of 64 bytes, and a bandwidth in Mbps, the transmission time is of the order of tens of microseconds. So, the effect of variations of transmission delays on overall latency is negligible. So, We ignore the effect of transmission delays in our predictions in all parts. In this case, there is no multiplexing of links, so queuing delay is zero. Thus, the overall latency is the sum of the latency of the individual links L1,L2,L3
+
+Expected throughput between h1-h4 = 20.91 Mbps. This throughput is the minimum of the throughput of the individual links. We are calculating the throughput as the average of the sender and client throughput obtained from our Iperfer tool.
+
+Measured latency between h1-h4 = 161.05 ms.
+
+Measured throughput between h1-h4 = 19.78 Mbps.
+
+Question 3
+2 pairs of hosts between s1 and s4:
+Expected latency for communicating = 161.55 ms. This latency is the sum of latencies of links L1, L2 and L3. In addition, there will be some queuing delays.  
+
+Expected throughput = 10.89 Mbps. Throughput for communication for each pair of hosts will be half of the link throughput of the minimum throughput of L1, L2 and L3. The throughput of the link between s1 and s4 = 19.78 Mbps (L1), the minimum of L1,L2 and L3.
+
+Measured latency = 161.023 ms and 161.085 ms for the two pair of hosts respectively (h1-h4, h7-h9).
+
+Measured throughput = 15.51 Mbps and 7.125 Mbps between h1-h4 and h7-h9 respectively. The sum of the measured throughput is 22.6 Mbps, the same as that of L1. Thus, when multiplexed, it is not guaranteed that the throughput seen for each communication will be the same (i.e. the half of the link throughput), but the sum of all throughputs will be equal to the minimum throughput of all links involved.
+
+3 pairs of hosts between s1 and s4:
+Expected latency for communication = 161.55ms. Sum of L1, L2 and L3 latencies plus additiona queuing delay.
+
+Expected throughput = 6.59 Mbps. Throughput for communication for each pair of hosts will be one-third of the minimum throughput of links L1, L2 and L3.  
+
+Measured latency = 160.89 ms, 160.91 ms, 160.78 ms respectively between h1-h4, h7-h9 and h8-h10.
+
+Measured throughput: 6.43 Mbps, 8.37 Mbps and 6.12 Mbps between h1-h4, h7-h9 and h8-h10 respectively. Sum of the throughputs is 20.6 Mbps, the same as the throughput of the minimum link involved, i.e. L1.
+ 
+Question 4
+For h5-h6 communication:
+Expected latency = 41.35 ms. Once again, this is the sum of latencies of L4, L2 and L5. Plus, there will be additional queuing delays at switches s2 and s3.
+
+Expected throughput < 25 Mbps. The link with minimum throughput is L4 and L5 (~25Mbps), and the link which is multiplexed in this communication is L2 (~40 Mbps). Ideally, the throughput of this link should be equally divided between all communication sharing it. This means 20 Mbps is available for h5-h6 communiation and 20 for h1-h4 communication, which makes it the link with minimum throughput involved. However, this division is not always half. Also, the throughput of h1-h4 cannot be more than 20 Mbps,  we expect h5-h6 throughput to be between 20 and 25 Mbps.  
+
+Measured latency = 41.089 ms
+
+Measured throughput = 22.657 Mbps
+
+For h1-h4 communication:
+Expected latency = 161.55 ms. Latency = L1+L2+L3 communication latency plus queuing delay.
+
+Expected throughput < 20 Mbps. L1 is the link with minimum throughput (20 Mbps), and in addition L2 is multiplexed. Plus, there will be queuing at S2. So, we think the throughput will be less than 20 Mbps. 
+
+Measured latency = 160.538 ms
+
+Measured throughput = 16.3 Mbps
