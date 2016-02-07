@@ -29,7 +29,7 @@ public class Iperfer {
             try {
                 new Client(argMap.get("h"), Integer.parseInt(argMap.get("p")), Double.parseDouble(argMap.get("t"))).start();
             } catch (Exception e) {
-                System.out.println("Client connection failed! \n" + e.getMessage());
+                System.out.println("Error: Client connection failed! \n" + e.getMessage());
             }
         }
     }
@@ -144,7 +144,7 @@ public class Iperfer {
                     if (d < 0)
                         throw new RuntimeException();
                 } catch (Exception e) {
-                    throw new RuntimeException("Invalid time entered!");
+                    throw new RuntimeException("Error: Invalid time entered!");
                 }
             }
         }
