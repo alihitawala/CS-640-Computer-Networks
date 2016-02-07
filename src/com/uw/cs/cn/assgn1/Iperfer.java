@@ -48,15 +48,17 @@ public class Iperfer {
             DataInputStream inFromClient = new DataInputStream(client.getInputStream());
             long totalReceived = 0;
             long startTime = System.nanoTime();
+            double totalTimeInReceiving = 0;
             try {
                 while (true) {
                     inFromClient.readFully(incoming);
+                    totalTimeInReceiving = (System.nanoTime() - startTime);
                     totalReceived++;
                 }
             } catch (EOFException e) {
                 //do nothing
             }
-            double totalTimeInReceiving = (System.nanoTime() - startTime) / Math.pow(10, 6);
+            totalTimeInReceiving = totalTimeInReceiving / Math.pow(10, 6);
             serverSocket.close();
             double rate = (totalReceived * 8.0) / (totalTimeInReceiving);
             System.out.println("received=" + totalReceived + " KB rate=" + rate + " Mbps");
