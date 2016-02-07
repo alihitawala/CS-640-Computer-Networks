@@ -1,4 +1,4 @@
-package com.uw.cs.cn.assgn1;
+//package com.uw.cs.cn.assgn1;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -27,9 +27,9 @@ public class Iperfer {
             }
         } else {
             try {
-                new Client(argMap.get("h"), Integer.parseInt(argMap.get("p")), Integer.parseInt(argMap.get("t"))).start();
+                new Client(argMap.get("h"), Integer.parseInt(argMap.get("p")), Double.parseDouble(argMap.get("t"))).start();
             } catch (Exception e) {
-                System.out.println("Client couldn't be started!" + e.getMessage());
+                System.out.println("Client connection failed! \n" + e.getMessage());
             }
         }
     }
@@ -66,10 +66,10 @@ public class Iperfer {
     static class Client {
         private final String host;
         private final int port;
-        private final int time;
+        private final double time;
         private final byte[] payload = new byte[1000];
 
-        public Client(String host, int port, int time) {
+        public Client(String host, int port, double time) {
             this.host = host;
             this.port = port;
             this.time = time;
@@ -79,7 +79,7 @@ public class Iperfer {
             Socket socket = new Socket(this.host, this.port);
             DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
             long totalWrites = 0;
-            long endTime = System.nanoTime() + this.time * (long) Math.pow(10, 9);
+            long endTime = System.nanoTime() +  (long) (this.time * Math.pow(10, 9));
             while (System.nanoTime() < endTime) {
                 outputStream.write(payload);
                 totalWrites++;
@@ -123,8 +123,8 @@ public class Iperfer {
 
         private void checkArguments(List<String> optionList, Map<String, String> argMap) {
             boolean clientCondition = optionList.contains("c") && optionList.contains("h")
-                    && optionList.contains("t") && optionList.contains("p") && optionList.size() == 4;
-            boolean serverCondition = optionList.contains("s") && optionList.size() == 2 && optionList.contains("p");
+                    && optionList.contains("t") && optionList.contains("p") && optionList.size() == 4 && argMap.containsKey("h") && argMap.containsKey("p") && argMap.containsKey("t") && !argMap.containsKey("c");
+            boolean serverCondition = optionList.contains("s") && optionList.size() == 2 && optionList.contains("p") && argMap.containsKey("p") && !argMap.containsKey("s");
             if (!clientCondition && !serverCondition) {
                 throw new RuntimeException(ERROR_WRONG_ARG);
             }
@@ -135,6 +135,15 @@ public class Iperfer {
                 }
             } catch (Exception e) {
                 throw new RuntimeException(ERROR_PORT_RANGE);
+            }
+            if (!isServer()) {
+                try {
+                    double d = Double.parseDouble(argMap.get("t"));
+                    if (d < 0)
+                        throw new RuntimeException();
+                } catch (Exception e) {
+                    throw new RuntimeException("Invalid time entered!");
+                }
             }
         }
     }
